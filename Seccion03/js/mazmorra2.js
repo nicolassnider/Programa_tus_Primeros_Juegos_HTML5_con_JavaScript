@@ -14,6 +14,8 @@ var protagonista;
 
 var enemigo = [];
 
+var antorchas = []
+
 var tileMap;
 
 var escenario = [
@@ -40,8 +42,33 @@ function dibujaEscenario() {
     }
 }
 
-function dibujaAntorcha() {
-    ctx.drawImage(tileMap, tile * 32, 0, 32, 32, anchoF * x, altoF * y, anchoF, altoF);
+var antorcha = function (x, y) {
+    this.x = x;
+    this.y = y;
+
+    this.retraso = 10
+    this.contador =0;
+    this.fotograma = 0; //0-3
+
+    this.cambiaFotograma = function () {
+        if (this.fotograma < 3) {
+            this.fotograma++;
+        }
+        else {
+            this.fotograma = 0;
+        }
+    }
+
+    this.dibuja = function () {
+        if (this.contador < this.retraso) {
+            this.contador++
+        }
+        else {
+            this.contador = 0;
+            this.cambiaFotograma()
+        }
+        ctx.drawImage(tileMap, this.fotograma * 32,64,32,32,anchoF * x, altoF * y, anchoF, altoF)
+    }
 }
 
 
@@ -239,6 +266,12 @@ function inicializa() {
     enemigo.push(new malo(5, 7))
     enemigo.push(new malo(7, 7))
 
+    //CREA ANTORCHAS
+    antorchas.push(new antorcha(0, 0))
+    antorchas.push(new antorcha(0, 2))
+    antorchas.push(new antorcha(0, 4))
+    antorchas.push(new antorcha(0, 6))
+
     //CREA ESCENARIO
     tileMap = new Image()
     tileMap.src = "js/img/tilemap.png"
@@ -285,6 +318,11 @@ function principal() {
     for (c = 0; c < enemigo.length; c++) {
         enemigo[c].mueve();
         enemigo[c].dibuja();
+    }
+
+    for (c = 0; c < antorchas.length; c++) {
+        
+        antorchas[c].dibuja();
     }
 
 }
